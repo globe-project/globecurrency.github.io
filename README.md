@@ -1,1 +1,1 @@
-# Particl.io
+# globecurrency.org
