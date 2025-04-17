@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>globecurrency.org - AI Assistant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" media="all" href="css/app.min.css">
+    <style>
+      .ai-chat-container {
+        max-width: 800px;
+        margin: 100px auto;
+        background: #f9f9f9;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.05);
+      }
+      .ai-chat-log {
+        height: 300px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        font-family: monospace;
+        font-size: 14px;
+        border: 1px solid #e1e1e1;
+      }
+      .ai-chat-input {
+        display: flex;
+        gap: 12px;
+      }
+      .ai-chat-input input {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+      .ai-chat-input button {
+        padding: 12px 24px;
+        background-color: #3484ff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .ai-chat-input button:hover {
+        background-color: #226fe2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="outer">
+      <!-- Include your existing header -->
+      <!-- Paste your <header> block here if not included via JS -->
+
+      <!-- AI Chat Section -->
+      <div class="ai-chat-container center">
+        <h1 class="h2">Globe AI Assistant</h1>
+        <p>Ask our AI assistant anything about Globe, smart contracts, staking, privacy, and more.</p>
+        <div class="ai-chat-log" id="chatLog"></div>
+        <div class="ai-chat-input">
+          <input type="text" id="userInput" placeholder="Type your question here..." />
+          <button onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+
+      <!-- Include your existing footer -->
+      <!-- Paste your <footer> block here if not included via JS -->
+    </div>
+
+    <script>
+  async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const log = document.getElementById("chatLog");
+
+    const userMessage = input.value.trim();
+    if (!userMessage) return;
+
+    log.innerHTML += `<div><strong>You:</strong> ${userMessage}</div>`;
+    input.value = "";
+
+    try {
+      const response = await fetch("https://api.chaingpt.org", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer AI_ACCESS_KEY"
+        },
+        body: JSON.stringify({
+          message: userMessage
+        })
+      });
+
+      const data = await response.json();
+      const reply = data.response || "Sorry, I couldn't respond.";
+
+      log.innerHTML += `<div><strong>Globe AI:</strong> ${reply}</div>`;
+      log.scrollTop = log.scrollHeight;
+    } catch (error) {
+      console.error("ChainGPT error:", error);
+      log.innerHTML += `<div><strong>Globe AI:</strong> An error occurred. Please try again later.</div>`;
+    }
+  }
+</script>
+
+  </body>
+</html>
