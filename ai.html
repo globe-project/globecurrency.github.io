@@ -109,9 +109,12 @@
     </div>
 
     <script>
-      const API_KEY = OPENAI_KEY;
+      // 🛡️ Expecting OPENAI_KEY to be defined somewhere (injected securely)
+      if (typeof OPENAI_KEY === 'undefined') {
+        console.error("OPENAI_KEY is not defined. Please inject it before loading this script.");
+      }
   
-      async function sendMessage() {
+      document.getElementById("send-button").addEventListener("click", async () => {
         const input = document.getElementById("user-input").value;
         const responseBox = document.getElementById("response");
         responseBox.innerText = "Thinking...";
@@ -121,7 +124,7 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${API_KEY}`
+              "Authorization": `Bearer ${OPENAI_KEY}`
             },
             body: JSON.stringify({
               model: "gpt-3.5-turbo",
@@ -134,7 +137,7 @@
         } catch (error) {
           responseBox.innerText = "Error: " + error.message;
         }
-      }
+      });
     </script>
 
   </body>
