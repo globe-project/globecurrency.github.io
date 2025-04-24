@@ -3,51 +3,91 @@
   <head>
     <meta charset="utf-8">
     <title>globecurrency.org - AI Assistant</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+    <link rel="manifest" href="img/site.webmanifest">
+    <link rel="mask-icon" href="img/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="Globe - The Future of Finance">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@globe_currency">
+    <meta name="twitter:title" content="The Future of Finance">
+    <meta name="twitter:description" content="globecurrency.org - The Future of Finance">
+    <meta name="twitter:creator" content="@particlproject">
+    <meta name="twitter:image" content="">
+    <meta property="og:title" content="globecurrency.org - The Future of Finance">
+    <meta property="og:type" content="Article">
+    <meta property="og:url" content="https://globecurrency.org">
+    <meta property="og:image" content="">
+    <meta property="og:description" content="Globe - The Future of Finance">
+    <meta property="og:site_name" content="Globe - The Future of Finance">
+    <meta property="fb:admins" content="">
     <link rel="stylesheet" media="all" href="css/app.min.css">
-    <style>
-      .ai-chat-container {
-        max-width: 800px;
-        margin: 100px auto;
-        background: #f9f9f9;
-        padding: 40px;
-        border-radius: 16px;
-        box-shadow: 0 0 30px rgba(0,0,0,0.05);
+    <script>
+      var viewportmeta = document.querySelector('meta[name="viewport"]');
+      if (viewportmeta) {
+        if (screen.width < 375) {
+          var newScale = screen.width / 375;
+          viewportmeta.content = 'width=375, minimum-scale=' + newScale + ', maximum-scale=1.0, user-scalable=no, initial-scale=' + newScale + '';
+        } else {
+          viewportmeta.content = 'width=device-width, maximum-scale=1.0, initial-scale=1.0';
+        }
       }
-      .ai-chat-log {
-        height: 300px;
-        overflow-y: auto;
-        margin-bottom: 20px;
-        padding: 20px;
-        background: #fff;
-        border-radius: 10px;
-        font-family: monospace;
-        font-size: 14px;
-        border: 1px solid #e1e1e1;
-      }
-      .ai-chat-input {
-        display: flex;
-        gap: 12px;
-      }
-      .ai-chat-input input {
-        flex: 1;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-      }
-      .ai-chat-input button {
-        padding: 12px 24px;
-        background-color: #3484ff;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-      }
-      .ai-chat-input button:hover {
-        background-color: #226fe2;
-      }
-    </style>
+    </script>
   </head>
+  <body>
+    <script>
+      console.log(localStorage.getItem('darkMode'));
+      if (localStorage.getItem('darkMode') === "on") {
+        document.body.classList.add("dark");
+        document.addEventListener("DOMContentLoaded", function() {
+          document.querySelector('.js-theme input').checked = true;
+        });
+      }
+    </script>
+    <!-- outer-->
+    <div class="outer">
+      <!-- header-->
+      <header class="header js-header">
+        <div class="header__center center"><a class="header__logo" href="https://globecurrency.org"><img class="some-icon" src="img/logo-dark.png" alt="Particl.io"><img class="some-icon-dark" src="img/logo-dark.png" alt="Particl.io"></a>
+          <div class="header__wrap js-header-wrap">
+            <nav class="header__nav"><a class="header__link active" href="marketplace">Marketplace</a><a class="header__link" href="coin">Coin</a><a class="header__link" target="_blank" href="https://basicswapdex.com">Dex</a><a class="header__link" href="about">About</a><a class="header__link" href="https://particl.news" target="_blank">Blog</a></nav>
+            <div class="header__group">
+              <div class="header__contacts">
+                <div class="header__element">
+                  <div class="header__subtitle"></div>
+                  <div class="header__text"></div>
+                </div>
+              </div>
+              <div class="header__socials"><a class="header__social" href="https://twitter.com/globe_currency" target="_blank" title="twitter">
+                  <svg class="icon icon-twitter">
+                    <use xlink:href="#icon-twitter"></use>
+                  </svg></a><a class="header__social" href="https://discord.me/globecurrency" target="_blank" title="Discord">
+                  <svg class="icon icon-discord">
+                    <use xlink:href="#icon-discord"></use>
+                  </svg></a><a class="header__social" href="https://www.reddit.com/r/globecurrency/" target="_blank" title="Reddit">
+                  <svg class="icon icon-reddit">
+                    <use xlink:href="#icon-reddit"></use>
+                  </svg></a><a class="header__social" href="https://github.com/globeproject" target="_blank" title="Github">
+                  <svg class="icon icon-github">
+                    <use xlink:href="#icon-github"></use>
+                  </svg></a></div><a class="button button-stroke button-small header__button" href="downloads">Install
+                <svg class="icon icon-download">
+                  <use xlink:href="#icon-download"></use>
+                </svg></a>
+            </div>
+          </div><a class="button button-stroke button-small header__button" href="downloads">Install
+            <svg class="icon icon-download">
+              <use xlink:href="#icon-download"></use>
+            </svg></a>
+          <button class="header__burger js-header-burger"></button>
+        </div>
+      </header>
   <body>
     <div class="outer">
       <!-- Include your existing header -->
