@@ -88,25 +88,23 @@
           <button class="header__burger js-header-burger"></button>
         </div>
       </header>
-  <body>
-    <div class="outer">
-      <!-- Include your existing header -->
-      <!-- Paste your <header> block here if not included via JS -->
 
-      <!-- AI Chat Section -->
-      <div class="ai-chat-container center">
-        <h1 class="h2">Globe AI Assistant</h1>
-        <p>Ask our AI assistant anything about Globe, smart contracts, staking, privacy, and more.</p>
-        <div class="ai-chat-log" id="chatLog"></div>
-        <div class="ai-chat-input">
-          <input type="text" id="userInput" placeholder="Type your question here..." />
-          <button onclick="sendMessage()">Send</button>
+      <body>
+        <div class="outer">
+      
+          <!-- AI Chat Section -->
+          <div class="ai-chat-container center">
+            <h1 class="h2">Globe AI Assistant</h1>
+            <p>Ask our AI assistant anything about Globe, smart contracts, staking, privacy, and more.</p>
+            <div class="ai-chat-log" id="chatLog"></div>
+            <div class="ai-chat-input">
+              <input type="text" id="userInput" placeholder="Type your question here..." />
+              <button id="send-button">Send</button>
+            </div>
+          </div>
+      
+          <!-- Include your existing footer -->
         </div>
-      </div>
-
-      <!-- Include your existing footer -->
-      <!-- Paste your <footer> block here if not included via JS -->
-    </div>
 
     <script>
       // 🛡️ Expecting OPENAI_KEY to be defined somewhere (injected securely)
