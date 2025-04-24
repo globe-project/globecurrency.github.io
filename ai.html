@@ -106,37 +106,58 @@
           <!-- Include your existing footer -->
         </div>
 
-    <script>
-      // 🛡️ Expecting OPENAI_KEY to be defined somewhere (injected securely)
-      if (typeof OPENAI_KEY === 'undefined') {
-        console.error("OPENAI_KEY is not defined. Please inject it before loading this script.");
-      }
-  
-      document.getElementById("send-button").addEventListener("click", async () => {
-        const input = document.getElementById("user-input").value;
-        const responseBox = document.getElementById("response");
-        responseBox.innerText = "Thinking...";
-  
-        try {
-          const res = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${OPENAI_KEY}`
-            },
-            body: JSON.stringify({
-              model: "gpt-3.5-turbo",
-              messages: [{ role: "user", content: input }]
-            })
-          });
-  
-          const data = await res.json();
-          responseBox.innerText = data.choices?.[0]?.message?.content || "No response.";
-        } catch (error) {
-          responseBox.innerText = "Error: " + error.message;
-        }
-      });
-    </script>
+        <script>
+          // Make sure OPENAI_KEY is defined globally before this runs!
+          if (typeof OPENAI_KEY === 'undefined') {
+            console.error("OPENAI_KEY is not defined. Please define it securely before this script.");
+          }
+      
+          document.getElementById("send-button").addEventListener("click", sendMessage);
+      
+          async function sendMessage() {
+            const inputField = document.getElementById("userInput");
+            const chatLog = document.getElementById("chatLog");
+            const userMessage = inputField.value.trim();
+      
+            if (!userMessage) return;
+      
+            // Display user message in chat log
+            const userEntry = document.createElement("div");
+            userEntry.textContent = "You: " + userMessage;
+            chatLog.appendChild(userEntry);
+      
+            inputField.value = "";
+            inputField.disabled = true;
+      
+            const loadingEntry = document.createElement("div");
+            loadingEntry.textContent = "AI: Thinking...";
+            chatLog.appendChild(loadingEntry);
+      
+            try {
+              const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${OPENAI_KEY}`
+                },
+                body: JSON.stringify({
+                  model: "gpt-3.5-turbo",
+                  messages: [{ role: "user", content: userMessage }]
+                })
+              });
+      
+              const data = await response.json();
+              const aiMessage = data.choices?.[0]?.message?.content || "Sorry, I didn’t understand that.";
+      
+              loadingEntry.textContent = "AI: " + aiMessage;
+            } catch (error) {
+              loadingEntry.textContent = "AI: Error – " + error.message;
+            } finally {
+              inputField.disabled = false;
+              inputField.focus();
+            }
+          }
+        </script>
 
   </body>
 </html>
