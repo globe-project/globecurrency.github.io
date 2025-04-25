@@ -105,59 +105,39 @@
       
           <!-- Include your existing footer -->
         </div>
-
+      
         <script>
-          // Make sure OPENAI_KEY is defined globally before this runs!
-          if (typeof OPENAI_KEY === 'undefined') {
-            console.error("OPENAI_KEY is not defined. Please define it securely before this script.");
-          }
+          document.getElementById("send-button").addEventListener("click", async () => {
+            const input = document.getElementById("userInput").value;
+            
+            // Append the user input to the chat log
+            const userMessageElement = document.createElement("div");
+            userMessageElement.classList.add("user-message");
+            userMessageElement.textContent = `You: ${input}`;
+            document.getElementById("chatLog").appendChild(userMessageElement);
       
-          document.getElementById("send-button").addEventListener("click", sendMessage);
+            // Clear the input field
+            document.getElementById("userInput").value = "";
       
-          async function sendMessage() {
-            const inputField = document.getElementById("userInput");
-            const chatLog = document.getElementById("chatLog");
-            const userMessage = inputField.value.trim();
+            // Send the user input to the Cloudflare Worker
+            const res = await fetch("https://chatgpt-proxy.globecurrency25.workers.dev", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ message: input })
+            });
+            
+            const data = await res.json();
       
-            if (!userMessage) return;
+            // Append the AI response to the chat log
+            const aiMessageElement = document.createElement("div");
+            aiMessageElement.classList.add("ai-message");
+            aiMessageElement.textContent = `AI: ${data.reply}`;
+            document.getElementById("chatLog").appendChild(aiMessageElement);
       
-            // Display user message in chat log
-            const userEntry = document.createElement("div");
-            userEntry.textContent = "You: " + userMessage;
-            chatLog.appendChild(userEntry);
-      
-            inputField.value = "";
-            inputField.disabled = true;
-      
-            const loadingEntry = document.createElement("div");
-            loadingEntry.textContent = "AI: Thinking...";
-            chatLog.appendChild(loadingEntry);
-      
-            try {
-              const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": `Bearer ${OPENAI_KEY}`
-                },
-                body: JSON.stringify({
-                  model: "gpt-3.5-turbo",
-                  messages: [{ role: "user", content: userMessage }]
-                })
-              });
-      
-              const data = await response.json();
-              const aiMessage = data.choices?.[0]?.message?.content || "Sorry, I didn’t understand that.";
-      
-              loadingEntry.textContent = "AI: " + aiMessage;
-            } catch (error) {
-              loadingEntry.textContent = "AI: Error – " + error.message;
-            } finally {
-              inputField.disabled = false;
-              inputField.focus();
-            }
-          }
+            // Scroll to the bottom of the chat log
+            document.getElementById("chatLog").scrollTop = document.getElementById("chatLog").scrollHeight;
+          });
         </script>
-
-  </body>
-</html>
+      </body>
+      </html>
+      
