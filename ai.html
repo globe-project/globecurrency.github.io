@@ -134,13 +134,10 @@
         typeNextChar();
       }
     
-      // Function to parse Markdown and render HTML correctly
+      // Function to parse Markdown and return HTML content
       function renderMarkdownToHtml(markdownText) {
-        // Step 1: Parse Markdown to HTML using marked.js
-        const parsedHtml = marked.parse(markdownText);
-    
-        // Step 2: Return parsed HTML without sanitizing (no DOMPurify)
-        return parsedHtml;
+        // Parse Markdown to HTML using marked.js
+        return marked.parse(markdownText);
       }
     
       // Event listener for sending the message
@@ -172,7 +169,7 @@
           const data = await response.json();
           const aiResponse = data.reply;
     
-          // Step 4: Render Markdown to HTML without sanitizing
+          // Step 4: Render Markdown to HTML
           const renderedHtml = renderMarkdownToHtml(aiResponse);
     
           // Step 5: Create a new div for the AI response
