@@ -145,14 +145,26 @@
           const data = await response.json();
           const rawMarkdown = data.reply;
     
+          // Log the raw markdown response (for debugging)
+          console.log("Raw Markdown:", rawMarkdown);
+    
+          // Parse the markdown into HTML
+          const htmlFromMarkdown = marked.parse(rawMarkdown);
+    
+          // Log the HTML after parsing (for debugging)
+          console.log("HTML from Markdown:", htmlFromMarkdown);
+    
+          // Sanitize the parsed HTML
+          const cleanHtml = DOMPurify.sanitize(htmlFromMarkdown);
+    
+          // Log the sanitized HTML (for debugging)
+          console.log("Sanitized HTML:", cleanHtml);
+    
+          // Insert the sanitized HTML into the DOM gradually
           const aiMessageElement = document.createElement('div');
           aiMessageElement.className = 'message ai-message';
     
-          // Proper Markdown parsing -> THEN sanitization
-          const htmlFromMarkdown = marked.parse(rawMarkdown);
-          const cleanHtml = DOMPurify.sanitize(htmlFromMarkdown); // This is now safe HTML!
-    
-          // Use the gradual typing effect
+          // Gradually type out the HTML content
           typeHtmlGradually(aiMessageElement, cleanHtml, 20);
     
           chatLog.appendChild(aiMessageElement);
@@ -169,17 +181,17 @@
         }
       });
     
-      // Allow pressing Enter
+      // Allow pressing Enter to send
       userInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
           sendButton.click();
         }
       });
     
-      // Gradually type HTML
+      // Gradual typing effect function
       function typeHtmlGradually(element, html, delay) {
         let index = 0;
-        element.innerHTML = ''; // Clear
+        element.innerHTML = ''; // Clear previous content
         function typeNextChar() {
           if (index < html.length) {
             element.innerHTML += html.charAt(index);
@@ -190,11 +202,11 @@
         typeNextChar();
       }
     
-      // Stop typing
+      // Stop typing functionality
       stopButton.addEventListener('click', () => {
         clearTimeout(typingTimeout);
         stopButton.disabled = true;
       });
-    </script>    
+    </script>      
   </body>
 </html>
