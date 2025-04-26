@@ -150,8 +150,11 @@
           const aiMessageElement = document.createElement('div');
           aiMessageElement.className = 'message ai-message';
     
-          // Call typeHtmlGradually to simulate typing effect
-          typeHtmlGradually(aiMessageElement, marked.parse(aiResponse), 50); // 50ms delay per character
+          // Use marked to parse the markdown into HTML, without sanitizing
+          const htmlContent = marked.parse(aiResponse);
+    
+          // Now, inject the HTML content directly without any sanitization
+          typeHtmlGradually(aiMessageElement, htmlContent, 50); // 50ms delay per character
     
           chatLog.appendChild(aiMessageElement);
     
@@ -198,6 +201,6 @@
         clearTimeout(typingTimeout); // Stop typing effect
         stopButton.disabled = true; // Disable stop button after stopping
       });
-    </script>    
+    </script>  
   </body>
 </html>
