@@ -4558,7 +4558,7 @@ body.dark .some-icon {
 }
 
 #stop-button {
-  background-color: #ff4c4c; /* Red background */
+  background-color: #2c3e50; /* Red background */
   color: white;
   border: none;
   border-radius: 50%; /* Circle shape */
@@ -4573,11 +4573,11 @@ body.dark .some-icon {
 }
 
 #stop-button:hover {
-  background-color: #ff1a1a; /* Darker red on hover */
+  background-color: #34495e; /* Darker red on hover */
 }
 
 #stop-button:disabled {
-  background-color: #cccccc; /* Disabled button color */
+  background-color: #95a5a6; /* Disabled button color */
   cursor: not-allowed;
 }
 
