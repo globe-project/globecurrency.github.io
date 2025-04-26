@@ -4558,29 +4558,26 @@ body.dark .some-icon {
 }
 
 #stop-button {
-  display: inline-block;
-  margin-left: 8px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  background-color: #ff5c5c;
-  color: #ffffff;
+  background-color: #ff4c4c; /* Red background */
+  color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 50%; /* Circle shape */
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px; /* Adjust icon size */
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 #stop-button:hover {
-  background-color: #e04a4a;
-}
-
-#stop-button:active {
-  background-color: #c23c3c;
+  background-color: #ff1a1a; /* Darker red on hover */
 }
 
 #stop-button:disabled {
-  background-color: #cccccc;
+  background-color: #cccccc; /* Disabled button color */
   cursor: not-allowed;
 }
 
