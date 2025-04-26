@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>globecurrency.org - AI Assistant</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Load Markdown parser -->
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
@@ -91,7 +92,6 @@
 
       <body>
         <div class="outer">
-      
           <!-- AI Chat Section -->
           <div class="ai-chat-container center">
             <h1 class="h2">Globe AI Assistant</h1>
@@ -102,58 +102,59 @@
               <button id="send-button">Send</button>
             </div>
           </div>
-      
-          <!-- Include your existing footer -->
+          <!-- Footer can go here if needed -->
         </div>
       
         <script>
-          document.getElementById("send-button").addEventListener("click", async () => {
-            const inputField = document.getElementById("userInput");
-            const chatLog = document.getElementById("chatLog");
-            const input = inputField.value.trim();
-          
-            if (!input) {
-              return; // Don't send empty messages
-            }
-          
-            // Add user message to chat
-            const userMessageElement = document.createElement("div");
-            userMessageElement.classList.add("user-message");
-            userMessageElement.textContent = `You: ${input}`;
+          const chatLog = document.getElementById('chatLog');
+          const userInput = document.getElementById('userInput');
+          const sendButton = document.getElementById('send-button');
+      
+          sendButton.addEventListener('click', async () => {
+            const message = userInput.value.trim();
+            if (!message) return;
+      
+            // Show user message
+            const userMessageElement = document.createElement('div');
+            userMessageElement.className = 'message user-message';
+            userMessageElement.textContent = `You: ${message}`;
             chatLog.appendChild(userMessageElement);
-          
-            inputField.value = ""; // Clear input
-          
+      
+            // Clear input
+            userInput.value = '';
+      
+            // Send message to Cloudflare Worker
             try {
-              const res = await fetch("https://chatgpt-proxy.globecurrency25.workers.dev", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: input })
+              const response = await fetch('https://chatgpt-proxy.globecurrency25.workers.dev', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
               });
-          
-              if (!res.ok) {
-                throw new Error(`Server error: ${res.status}`);
-              }
-          
-              const data = await res.json();
-          
-              // Add AI reply to chat
-              const aiMessageElement = document.createElement("div");
-              aiMessageElement.classList.add("ai-message");
-              aiMessageElement.textContent = `AI: ${data.reply}`;
+      
+              const data = await response.json();
+      
+              // Render AI response (Markdown -> HTML)
+              const aiMessageElement = document.createElement('div');
+              aiMessageElement.className = 'message ai-message';
+              aiMessageElement.innerHTML = `AI:<br>${marked.parse(data.reply)}`; // Markdown to HTML
               chatLog.appendChild(aiMessageElement);
-          
-              chatLog.scrollTop = chatLog.scrollHeight; // Scroll down
+      
+              // Auto-scroll to bottom
+              chatLog.scrollTop = chatLog.scrollHeight;
             } catch (error) {
-              console.error("Error:", error);
-              const errorElement = document.createElement("div");
-              errorElement.classList.add("error-message");
+              const errorElement = document.createElement('div');
+              errorElement.className = 'message ai-message';
               errorElement.textContent = `Error: ${error.message}`;
               chatLog.appendChild(errorElement);
             }
           });
-          </script>
-          
+      
+          // Allow pressing Enter to send
+          userInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+              sendButton.click();
+            }
+          });
+        </script>
       </body>
       </html>
-      
