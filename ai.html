@@ -133,28 +133,41 @@
       
               const data = await response.json();
       
-              // Render AI response (Markdown -> HTML)
-              const aiMessageElement = document.createElement('div');
-              aiMessageElement.className = 'message ai-message';
-              aiMessageElement.innerHTML = `AI:<br>${marked.parse(data.reply)}`; // Markdown to HTML
-              chatLog.appendChild(aiMessageElement);
-      
-              // Auto-scroll to bottom
-              chatLog.scrollTop = chatLog.scrollHeight;
-            } catch (error) {
-              const errorElement = document.createElement('div');
-              errorElement.className = 'message ai-message';
-              errorElement.textContent = `Error: ${error.message}`;
-              chatLog.appendChild(errorElement);
-            }
-          });
-      
-          // Allow pressing Enter to send
-          userInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-              sendButton.click();
-            }
-          });
-        </script>
+              // Render AI response (Markdown -> HTML) + Gradually
+      const aiMessageElement = document.createElement('div');
+      aiMessageElement.className = 'message ai-message';
+      aiMessageElement.innerHTML = 'AI:<br><span id="ai-typing"></span>'; 
+      chatLog.appendChild(aiMessageElement);
+
+      const aiTyping = document.getElementById('ai-typing');
+      const formattedText = marked.parse(data.reply); // Markdown to HTML
+      let currentIndex = 0;
+
+      function typeCharacter() {
+        if (currentIndex < formattedText.length) {
+          aiTyping.innerHTML += formattedText[currentIndex];
+          currentIndex++;
+          setTimeout(typeCharacter, 20); // Typing speed (lower = faster)
+          chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll as typing
+        }
+      }
+
+      typeCharacter();
+
+    } catch (error) {
+      const errorElement = document.createElement('div');
+      errorElement.className = 'message ai-message';
+      errorElement.textContent = `Error: ${error.message}`;
+      chatLog.appendChild(errorElement);
+    }
+  });
+
+  // Allow pressing Enter to send
+  userInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      sendButton.click();
+    }
+  });
+</script>
       </body>
       </html>
