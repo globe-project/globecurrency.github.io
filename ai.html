@@ -59,9 +59,9 @@
         });
       }
     </script>
-    <!-- outer-->
+
     <div class="outer">
-      <!-- header-->
+      <!-- header section (navigation bar) -->
       <header class="header js-header">
         <div class="header__center center"><a class="header__logo" href="https://globecurrency.org"><img class="some-icon" src="img/logo-dark.png" alt="Particl.io"><img class="some-icon-dark" src="img/logo-dark.png" alt="Particl.io"></a>
           <div class="header__wrap js-header-wrap">
@@ -98,104 +98,98 @@
         </div>
       </header>
 
-      <body>
-        <div class="outer">
-          <!-- AI Chat Section -->
-          <div class="ai-chat-container center">
-            <h1 class="h2">Globe AI Assistant</h1>
-            <p>Ask our AI assistant anything about Globe, smart contracts, staking, privacy, and more.</p>
-            <div class="ai-chat-log" id="chatLog"></div>
-            <div class="ai-chat-input">
-              <input type="text" id="userInput" placeholder="Type your question here..." />
-              <button id="send-button">Send</button>
-            </div>
-          </div>
-          <!-- Footer can go here if needed -->
+      <!-- AI Chat Section -->
+      <div class="ai-chat-container center">
+        <h1 class="h2">Globe AI Assistant</h1>
+        <p>Ask our AI assistant anything about Globe, smart contracts, staking, privacy, and more.</p>
+        <div class="ai-chat-log" id="chatLog"></div>
+        <div class="ai-chat-input">
+          <input type="text" id="userInput" placeholder="Type your question here..." />
+          <button id="send-button">Send</button>
+          <button id="stop-button" disabled>Stop Typing</button>
         </div>
+      </div>
+    </div>
       
-        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-  const chatLog = document.getElementById('chatLog');
-  const userInput = document.getElementById('userInput');
-  const sendButton = document.getElementById('send-button');
-  const stopButton = document.getElementById('stop-button'); // Stop button element
-  let typingTimeout;
+    <script>
+      const chatLog = document.getElementById('chatLog');
+      const userInput = document.getElementById('userInput');
+      const sendButton = document.getElementById('send-button');
+      const stopButton = document.getElementById('stop-button');
+      let typingTimeout;
 
-  sendButton.addEventListener('click', async () => {
-    const message = userInput.value.trim();
-    if (!message) return;
+      sendButton.addEventListener('click', async () => {
+        const message = userInput.value.trim();
+        if (!message) return;
 
-    // Show user message
-    const userMessageElement = document.createElement('div');
-    userMessageElement.className = 'message user-message';
-    userMessageElement.textContent = `You: ${message}`;
-    chatLog.appendChild(userMessageElement);
+        // Show user message
+        const userMessageElement = document.createElement('div');
+        userMessageElement.className = 'message user-message';
+        userMessageElement.textContent = `You: ${message}`;
+        chatLog.appendChild(userMessageElement);
 
-    // Clear input
-    userInput.value = '';
+        // Clear input
+        userInput.value = '';
 
-    // Disable the send button while generating AI response
-    sendButton.disabled = true;
-    stopButton.disabled = false;
+        // Disable the send button while generating AI response
+        sendButton.disabled = true;
+        stopButton.disabled = false;
 
-    // Send message to Cloudflare Worker
-    try {
-      const response = await fetch('https://chatgpt-proxy.globecurrency25.workers.dev', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message })
+        // Send message to Cloudflare Worker
+        try {
+          const response = await fetch('https://chatgpt-proxy.globecurrency25.workers.dev', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+          });
+
+          const data = await response.json();
+          const aiResponse = data.reply;
+
+          // Render AI response (Markdown -> HTML)
+          const aiMessageElement = document.createElement('div');
+          aiMessageElement.className = 'message ai-message';
+
+          // Call typeHtmlGradually to simulate typing effect
+          typeHtmlGradually(aiMessageElement, marked.parse(aiResponse), 50);
+
+          chatLog.appendChild(aiMessageElement);
+          chatLog.scrollTop = chatLog.scrollHeight;
+        } catch (error) {
+          const errorElement = document.createElement('div');
+          errorElement.className = 'message ai-message';
+          errorElement.textContent = `Error: ${error.message}`;
+          chatLog.appendChild(errorElement);
+        } finally {
+          sendButton.disabled = false;
+        }
       });
 
-      const data = await response.json();
-      const aiResponse = data.reply;
+      userInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          sendButton.click();
+        }
+      });
 
-      // Render AI response (Markdown -> HTML)
-      const aiMessageElement = document.createElement('div');
-      aiMessageElement.className = 'message ai-message';
-
-      // Call typeHtmlGradually to simulate typing effect
-      typeHtmlGradually(aiMessageElement, marked.parse(aiResponse), 50); // 50ms delay per character
-
-      chatLog.appendChild(aiMessageElement);
-
-      // Auto-scroll to bottom
-      chatLog.scrollTop = chatLog.scrollHeight;
-    } catch (error) {
-      const errorElement = document.createElement('div');
-      errorElement.className = 'message ai-message';
-      errorElement.textContent = `Error: ${error.message}`;
-      chatLog.appendChild(errorElement);
-    } finally {
-      sendButton.disabled = false; // Re-enable the send button
-    }
-  });
-
-  // Allow pressing Enter to send
-  userInput.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-      sendButton.click();
-    }
-  });
-
-  // Function to gradually type out HTML content
-  function typeHtmlGradually(element, html, delay) {
-    let index = 0;
-    element.innerHTML = ''; // Clear previous content
-    function typeNextChar() {
-      if (index < html.length) {
-        element.innerHTML += html.charAt(index);
-        index++;
-        typingTimeout = setTimeout(typeNextChar, delay);
+      // Function to gradually type out HTML content
+      function typeHtmlGradually(element, html, delay) {
+        let index = 0;
+        element.innerHTML = '';
+        function typeNextChar() {
+          if (index < html.length) {
+            element.innerHTML += html.charAt(index);
+            index++;
+            typingTimeout = setTimeout(typeNextChar, delay);
+          }
+        }
+        typeNextChar();
       }
-    }
-    typeNextChar();
-  }
 
-  // Stop button functionality to stop typing effect
-  stopButton.addEventListener('click', () => {
-    clearTimeout(typingTimeout); // Stop typing effect
-    stopButton.disabled = true; // Disable stop button after stopping
-  });
-  </script>      
+      // Stop button functionality to stop typing effect
+      stopButton.addEventListener('click', () => {
+        clearTimeout(typingTimeout);
+        stopButton.disabled = true;
+      });
+    </script>
   </body>
 </html>
