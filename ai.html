@@ -119,6 +119,14 @@
       const userInput = document.getElementById('userInput');
       const sendButton = document.getElementById('send-button');
       const stopButton = document.getElementById('stop-button');
+
+      function scrollToBottom() {
+        chatLog.scrollTo({
+          top: chatLog.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+
       let typingTimeout;
     
       // Gradual word typing effect function
