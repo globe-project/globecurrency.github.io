@@ -117,47 +117,20 @@
       const chatLog = document.getElementById('chatLog');
       const userInput = document.getElementById('userInput');
       const sendButton = document.getElementById('send-button');
-      const stopButton = document.getElementById('stop-button');
-      let typingTimeout;
-    
-      // Gradual typing effect function
-      function typeHtmlGradually(element, html, delay) {
-        let index = 0;
-        element.innerHTML = ''; // Clear previous content
-        function typeNextChar() {
-          if (index < html.length) {
-            element.innerHTML += html.charAt(index);
-            index++;
-            typingTimeout = setTimeout(typeNextChar, delay);
-          }
-        }
-        typeNextChar();
-      }
-    
-      // Function to parse Markdown and return HTML content
-      function renderMarkdownToHtml(markdownText) {
-        // Parse Markdown to HTML using marked.js
-        return marked.parse(markdownText);
-      }
-    
-      // Event listener for sending the message
+  
       sendButton.addEventListener('click', async () => {
         const message = userInput.value.trim();
         if (!message) return;
-    
+  
         // Show user message
         const userMessageElement = document.createElement('div');
         userMessageElement.className = 'message user-message';
         userMessageElement.textContent = `You: ${message}`;
         chatLog.appendChild(userMessageElement);
-    
+  
         // Clear input
         userInput.value = '';
-    
-        // Disable the send button while generating AI response
-        sendButton.disabled = true;
-        stopButton.disabled = false;
-    
+  
         // Send message to Cloudflare Worker
         try {
           const response = await fetch('https://chatgpt-proxy.globecurrency25.workers.dev', {
@@ -165,23 +138,15 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message })
           });
-    
+  
           const data = await response.json();
-          const aiResponse = data.reply;
-    
-          // Step 4: Render Markdown to HTML
-          const renderedHtml = renderMarkdownToHtml(aiResponse);
-    
-          // Step 5: Create a new div for the AI response
+  
+          // Render AI response (Markdown -> HTML)
           const aiMessageElement = document.createElement('div');
           aiMessageElement.className = 'message ai-message';
-    
-          // Step 6: Call typeHtmlGradually to simulate the typing effect
-          typeHtmlGradually(aiMessageElement, renderedHtml, 50); // 50ms delay per character
-    
-          // Step 7: Append the message to the chat log
+          aiMessageElement.innerHTML = `AI:<br>${marked.parse(data.reply)}`; // Markdown to HTML
           chatLog.appendChild(aiMessageElement);
-    
+  
           // Auto-scroll to bottom
           chatLog.scrollTop = chatLog.scrollHeight;
         } catch (error) {
@@ -189,22 +154,14 @@
           errorElement.className = 'message ai-message';
           errorElement.textContent = `Error: ${error.message}`;
           chatLog.appendChild(errorElement);
-        } finally {
-          sendButton.disabled = false; // Re-enable the send button
         }
       });
-    
+  
       // Allow pressing Enter to send
       userInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
           sendButton.click();
         }
-      });
-    
-      // Stop button functionality to stop typing effect
-      stopButton.addEventListener('click', () => {
-        clearTimeout(typingTimeout); // Stop typing effect
-        stopButton.disabled = true; // Disable stop button after stopping
       });
     </script>
   </body>
