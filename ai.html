@@ -120,6 +120,13 @@
       const stopButton = document.getElementById('stop-button');
       let typingTimeout;
     
+      // Initialize markdown-it
+      const md = window.markdownit({
+        html: true, // Allow HTML tags in Markdown
+        linkify: true, // Automatically turn URLs into links
+        typographer: true // Enable smart quotes and dashes
+      });
+    
       sendButton.addEventListener('click', async () => {
         const message = userInput.value.trim();
         if (!message) return;
@@ -145,13 +152,11 @@
           const data = await response.json();
           const rawMarkdown = data.reply;
     
-          // Log the raw markdown response (for debugging)
+          // Parse the markdown into HTML using markdown-it
+          const htmlFromMarkdown = md.render(rawMarkdown);
+    
+          // Log the raw markdown response and the parsed HTML (for debugging)
           console.log("Raw Markdown:", rawMarkdown);
-    
-          // Parse the markdown into HTML
-          const htmlFromMarkdown = marked.parse(rawMarkdown);
-    
-          // Log the HTML after parsing (for debugging)
           console.log("HTML from Markdown:", htmlFromMarkdown);
     
           // Sanitize the parsed HTML
@@ -207,6 +212,6 @@
         clearTimeout(typingTimeout);
         stopButton.disabled = true;
       });
-    </script>      
+    </script>   
   </body>
 </html>
