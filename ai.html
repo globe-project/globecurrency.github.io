@@ -181,12 +181,11 @@
     
         function typeNextChar() {
           if (index < html.length) {
-            // Append the next character and sanitize it
-            element.innerHTML += html.charAt(index);
-            
-            // Ensure the HTML is sanitized to avoid any unwanted tags being executed
-            element.innerHTML = DOMPurify.sanitize(element.innerHTML);
-            
+            const currentChar = html.charAt(index);
+    
+            // Append the next character directly
+            element.innerHTML += currentChar;
+    
             index++;
             typingTimeout = setTimeout(typeNextChar, delay);
           }
@@ -199,6 +198,6 @@
         clearTimeout(typingTimeout); // Stop typing effect
         stopButton.disabled = true; // Disable stop button after stopping
       });
-    </script>
+    </script>    
   </body>
 </html>
