@@ -4532,6 +4532,31 @@ body.dark .some-icon {
   background-color: #226fe2;
 }
 
+.blinking-cursor {
+  animation: blink 1s step-start 0s infinite;
+  color: black;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* AI message styling */
+.message.ai-message code {
+  background: #f0f0f0;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* Better user messages */
+.message.user-message {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 .hero-buyer {
   position: relative;
   display: -webkit-box;
