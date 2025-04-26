@@ -118,30 +118,74 @@
           const userInput = document.getElementById('userInput');
           const sendButton = document.getElementById('send-button');
           
-          // Add a stop button
+          // Create and insert Stop button
           const stopButton = document.createElement('button');
-          stopButton.innerText = 'Stop';
           stopButton.id = 'stop-button';
-          stopButton.style.display = 'none'; // Hidden by default
+          stopButton.textContent = 'Stop Generating';
+          stopButton.style.display = 'none';
           document.querySelector('.ai-chat-input').appendChild(stopButton);
           
-          const md = window.markdownit({ linkify: true, breaks: true });
-          let typingInterval = null; // For cancelling typing
-          
+          let typingInterval = null;
+        
+          function typeHtmlWordByWord(container, html) {
+            container.innerHTML = '';
+            stopButton.style.display = 'inline-block';
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            const nodes = Array.from(tempDiv.childNodes);
+            
+            let nodeIndex = 0;
+            let words = [];
+            let wordIndex = 0;
+        
+            typingInterval = setInterval(() => {
+              if (nodeIndex >= nodes.length) {
+                clearInterval(typingInterval);
+                typingInterval = null;
+                Prism.highlightAllUnder(container);
+                stopButton.style.display = 'none';
+                return;
+              }
+        
+              if (words.length === 0 && nodes[nodeIndex]) {
+                const currentNode = nodes[nodeIndex];
+                if (currentNode.nodeType === Node.TEXT_NODE) {
+                  words = currentNode.textContent.split(' ');
+                  container.appendChild(document.createTextNode(''));
+                } else if (currentNode.nodeType === Node.ELEMENT_NODE) {
+                  const clone = currentNode.cloneNode(false);
+                  container.appendChild(clone);
+                  words = currentNode.textContent.split(' ');
+                }
+              }
+        
+              if (words.length > 0) {
+                const lastElement = container.lastChild;
+                lastElement.textContent += (lastElement.textContent ? ' ' : '') + words[wordIndex];
+                wordIndex++;
+                if (wordIndex >= words.length) {
+                  nodeIndex++;
+                  words = [];
+                  wordIndex = 0;
+                }
+              }
+        
+              chatLog.scrollTop = chatLog.scrollHeight;
+            }, 100);
+          }
+        
           sendButton.addEventListener('click', async () => {
             const message = userInput.value.trim();
             if (!message) return;
         
-            // Show user message
             const userMessageElement = document.createElement('div');
             userMessageElement.className = 'message user-message';
             userMessageElement.textContent = `You: ${message}`;
             chatLog.appendChild(userMessageElement);
         
-            // Clear input
             userInput.value = '';
-            
-            // Send message to backend
+        
             try {
               const response = await fetch('https://chatgpt-proxy.globecurrency25.workers.dev', {
                 method: 'POST',
@@ -150,18 +194,18 @@
               });
         
               const data = await response.json();
-              
-              // Render AI response with typing effect
+        
               const aiMessageElement = document.createElement('div');
               aiMessageElement.className = 'message ai-message';
               chatLog.appendChild(aiMessageElement);
         
-              const rawHtml = md.render(data.reply); // Markdown → HTML
-              const cleanHtml = DOMPurify.sanitize(rawHtml); // Sanitize
-              typeHtmlGradually(aiMessageElement, cleanHtml);
+              // Convert Markdown to HTML, sanitize it
+              const rawHtml = marked.parse(data.reply);
+              const cleanHtml = DOMPurify.sanitize(rawHtml);
         
-              // Auto-scroll
-              chatLog.scrollTop = chatLog.scrollHeight;
+              // Type it word by word
+              typeHtmlWordByWord(aiMessageElement, cleanHtml);
+        
             } catch (error) {
               const errorElement = document.createElement('div');
               errorElement.className = 'message ai-message';
@@ -177,68 +221,13 @@
             }
           });
         
-          // Typing function
-          function typeHtmlWordByWord(container, html) {
-    container.innerHTML = '';
-    stopButton.style.display = 'inline-block';
-    
-    // Create a temporary DOM to work with
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-
-    const nodes = Array.from(tempDiv.childNodes);
-    let nodeIndex = 0;
-    let words = [];
-    let wordIndex = 0;
-    
-    typingInterval = setInterval(() => {
-      if (nodeIndex >= nodes.length) {
-        clearInterval(typingInterval);
-        typingInterval = null;
-        Prism.highlightAllUnder(container); // Syntax highlight after done
-        stopButton.style.display = 'none';
-        return;
-      }
-
-      // If starting a new node
-      if (words.length === 0 && nodes[nodeIndex]) {
-        const currentNode = nodes[nodeIndex];
-        if (currentNode.nodeType === Node.TEXT_NODE) {
-          words = currentNode.textContent.split(' ');
-          container.appendChild(document.createTextNode('')); // placeholder
-        } else if (currentNode.nodeType === Node.ELEMENT_NODE) {
-          const clone = currentNode.cloneNode(false); // shallow clone (just tag, no children)
-          container.appendChild(clone);
-          words = currentNode.textContent.split(' ');
-        }
-      }
-
-      // Typing words
-      if (words.length > 0) {
-        const lastElement = container.lastChild;
-        lastElement.textContent += (lastElement.textContent ? ' ' : '') + words[wordIndex];
-        wordIndex++;
-
-        if (wordIndex >= words.length) {
-          nodeIndex++;
-          words = [];
-          wordIndex = 0;
-        }
-      }
-
-      chatLog.scrollTop = chatLog.scrollHeight;
-    }, 100); // 100ms per word (adjust speed here)
-  }
-        
-          // Stop typing
+          // Stop button to cancel typing
           stopButton.addEventListener('click', () => {
             if (typingInterval) {
               clearInterval(typingInterval);
               typingInterval = null;
+              stopButton.style.display = 'none';
             }
-            const cursor = document.querySelector('.blinking-cursor');
-            if (cursor) cursor.remove();
-            stopButton.style.display = 'none';
           });
         </script>
         
