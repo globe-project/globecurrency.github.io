@@ -117,7 +117,7 @@
       const chatLog = document.getElementById('chatLog');
       const userInput = document.getElementById('userInput');
       const sendButton = document.getElementById('send-button');
-      const stopButton = document.getElementById('stop-button'); // Stop button element
+      const stopButton = document.getElementById('stop-button');
       let typingTimeout;
     
       sendButton.addEventListener('click', async () => {
@@ -132,12 +132,9 @@
     
         // Clear input
         userInput.value = '';
-    
-        // Disable the send button while generating AI response
         sendButton.disabled = true;
         stopButton.disabled = false;
     
-        // Send message to Cloudflare Worker
         try {
           const response = await fetch('https://chatgpt-proxy.globecurrency25.workers.dev', {
             method: 'POST',
@@ -146,17 +143,17 @@
           });
     
           const data = await response.json();
-          const aiResponse = data.reply;
+          const rawMarkdown = data.reply;
     
-          // Render AI response (Markdown -> HTML)
           const aiMessageElement = document.createElement('div');
           aiMessageElement.className = 'message ai-message';
     
-          // Use marked to parse the markdown into HTML, without sanitizing
-          const htmlContent = marked.parse(aiResponse);
+          // Proper Markdown parsing -> THEN sanitization
+          const htmlFromMarkdown = marked.parse(rawMarkdown);
+          const cleanHtml = DOMPurify.sanitize(htmlFromMarkdown); // This is now safe HTML!
     
-          // Now, inject the HTML content directly without any sanitization
-          typeHtmlGradually(aiMessageElement, htmlContent, 50); // 50ms delay per character
+          // Use the gradual typing effect
+          typeHtmlGradually(aiMessageElement, cleanHtml, 20);
     
           chatLog.appendChild(aiMessageElement);
     
@@ -168,29 +165,24 @@
           errorElement.textContent = `Error: ${error.message}`;
           chatLog.appendChild(errorElement);
         } finally {
-          sendButton.disabled = false; // Re-enable the send button
+          sendButton.disabled = false;
         }
       });
     
-      // Allow pressing Enter to send
+      // Allow pressing Enter
       userInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
           sendButton.click();
         }
       });
     
-      // Function to gradually type out HTML content
+      // Gradually type HTML
       function typeHtmlGradually(element, html, delay) {
         let index = 0;
-        element.innerHTML = ''; // Clear previous content
-    
+        element.innerHTML = ''; // Clear
         function typeNextChar() {
           if (index < html.length) {
-            const currentChar = html.charAt(index);
-    
-            // Append the next character directly
-            element.innerHTML += currentChar;
-    
+            element.innerHTML += html.charAt(index);
             index++;
             typingTimeout = setTimeout(typeNextChar, delay);
           }
@@ -198,11 +190,11 @@
         typeNextChar();
       }
     
-      // Stop button functionality to stop typing effect
+      // Stop typing
       stopButton.addEventListener('click', () => {
-        clearTimeout(typingTimeout); // Stop typing effect
-        stopButton.disabled = true; // Disable stop button after stopping
+        clearTimeout(typingTimeout);
+        stopButton.disabled = true;
       });
-    </script>  
+    </script>    
   </body>
 </html>
