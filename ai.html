@@ -108,36 +108,52 @@
       
         <script>
           document.getElementById("send-button").addEventListener("click", async () => {
-            const input = document.getElementById("userInput").value;
-            
-            // Append the user input to the chat log
+            const inputField = document.getElementById("userInput");
+            const chatLog = document.getElementById("chatLog");
+            const input = inputField.value.trim();
+          
+            if (!input) {
+              return; // Don't send empty messages
+            }
+          
+            // Add user message to chat
             const userMessageElement = document.createElement("div");
             userMessageElement.classList.add("user-message");
             userMessageElement.textContent = `You: ${input}`;
-            document.getElementById("chatLog").appendChild(userMessageElement);
-      
-            // Clear the input field
-            document.getElementById("userInput").value = "";
-      
-            // Send the user input to the Cloudflare Worker
-            const res = await fetch("https://chatgpt-proxy.globecurrency25.workers.dev", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ message: input })
-            });
-            
-            const data = await res.json();
-      
-            // Append the AI response to the chat log
-            const aiMessageElement = document.createElement("div");
-            aiMessageElement.classList.add("ai-message");
-            aiMessageElement.textContent = `AI: ${data.reply}`;
-            document.getElementById("chatLog").appendChild(aiMessageElement);
-      
-            // Scroll to the bottom of the chat log
-            document.getElementById("chatLog").scrollTop = document.getElementById("chatLog").scrollHeight;
+            chatLog.appendChild(userMessageElement);
+          
+            inputField.value = ""; // Clear input
+          
+            try {
+              const res = await fetch("https://chatgpt-proxy.globecurrency25.workers.dev", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: input })
+              });
+          
+              if (!res.ok) {
+                throw new Error(`Server error: ${res.status}`);
+              }
+          
+              const data = await res.json();
+          
+              // Add AI reply to chat
+              const aiMessageElement = document.createElement("div");
+              aiMessageElement.classList.add("ai-message");
+              aiMessageElement.textContent = `AI: ${data.reply}`;
+              chatLog.appendChild(aiMessageElement);
+          
+              chatLog.scrollTop = chatLog.scrollHeight; // Scroll down
+            } catch (error) {
+              console.error("Error:", error);
+              const errorElement = document.createElement("div");
+              errorElement.classList.add("error-message");
+              errorElement.textContent = `Error: ${error.message}`;
+              chatLog.appendChild(errorElement);
+            }
           });
-        </script>
+          </script>
+          
       </body>
       </html>
       
