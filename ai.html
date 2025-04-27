@@ -100,32 +100,33 @@
         </div>
       </header>
 
-      <!-- AI Chat Section -->
-    <div class="ai-chat-container center">
-      <h1 class="h2">Globe AI Assistant</h1>
-      <p>Ask our AI assistant anything about Globe, smart contracts, staking, privacy, and more.</p>
+    <!-- AI Chat Section -->
+<div class="ai-chat-container center">
+  <h1 class="h2">Globe AI Assistant</h1>
+  <p>Ask our AI assistant anything about Globe, smart contracts, staking, privacy, and more.</p>
 
-      <!-- Authentication Section -->
-      <div class="ai-auth-section" id="auth-section">
-        <input type="email" id="email" placeholder="Email" />
-        <input type="password" id="password" placeholder="Password" />
-        <button onclick="signUp(document.getElementById('email').value, document.getElementById('password').value)">Sign Up</button>
-        <button onclick="login(document.getElementById('email').value, document.getElementById('password').value)">Login</button>
-        <button onclick="logout()">Logout</button>
-      </div>
+  <!-- Authentication Section -->
+  <div class="ai-auth-section" id="auth-section">
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="signup-button" onclick="signUp(document.getElementById('email').value, document.getElementById('password').value)">Sign Up</button>
+    <button id="login-button" onclick="login(document.getElementById('email').value, document.getElementById('password').value)">Login</button>
+    <button id="logout-button" onclick="logout()">Logout</button>
+  </div>
 
-      <!-- Chat Log -->
-      <div class="ai-chat-log" id="chatLog"></div>
+  <!-- Chat Log -->
+  <div class="ai-chat-log" id="chatLog"></div>
 
-      <!-- Chat Input -->
-      <div class="ai-chat-input">
-        <input type="text" id="userInput" placeholder="Type your question here..." />
-        <button id="send-button">Send</button>
-        <button id="stop-button" disabled aria-label="Stop Typing">
-          &#10074;&#10074; <!-- Pause icon -->
-        </button>
-      </div>
-    </div>
+  <!-- Chat Input -->
+  <div class="ai-chat-input">
+    <input type="text" id="userInput" placeholder="Type your question here..." />
+    <button id="send-button">Send</button>
+    <button id="stop-button" disabled aria-label="Stop Typing">
+      &#10074;&#10074; <!-- Pause icon -->
+    </button>
+  </div>
+</div>
+
 
 
     <script>

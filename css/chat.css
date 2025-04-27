@@ -219,3 +219,171 @@
     cursor: not-allowed;
   }
   
+  /* General Button Styling */
+button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: inline-block;
+}
+
+/* Specific Styling for Sign Up, Login, and Logout Buttons */
+.ai-auth-section button {
+    background-color: #007BFF;
+    color: white;
+    margin: 8px 0;
+}
+
+.ai-auth-section button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ai-auth-section button:active {
+    background-color: #004085;
+    box-shadow: none;
+}
+
+/* Disabled Buttons */
+button:disabled {
+    background-color: #b3c7f9;
+    color: #7c8baf;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Input Fields (Email, Password, Chat Input) */
+input[type="email"], input[type="password"], input[type="text"] {
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+/* Focus State for Input Fields */
+input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* Form Container Styling */
+.ai-auth-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #f7f7f8;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Chat Input Area Styling */
+.ai-chat-input {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+#userInput {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    width: 100%;
+    margin-right: 10px;
+}
+
+#send-button {
+    padding: 12px 20px;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#send-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+#send-button:active {
+    background-color: #004085;
+    transform: translateY(0);
+}
+
+#stop-button {
+    padding: 12px;
+    background-color: #f44336;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#stop-button:hover {
+    background-color: #e53935;
+    transform: translateY(-2px);
+}
+
+#stop-button:active {
+    background-color: #c62828;
+    transform: translateY(0);
+}
+
+/* Chat Log Styling */
+#chatLog {
+    background: #f7f7f8;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Polished Text and Message Styling */
+.message {
+    max-width: 80%;
+    padding: 14px 18px;
+    border-radius: 16px;
+    line-height: 1.6;
+    font-size: 15px;
+    word-wrap: break-word;
+}
+
+.user-message {
+    background: #dcf0ff;
+    color: #004080;
+    align-self: flex-end;
+}
+
+.ai-message {
+    background: #ffffff;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    align-self: flex-start;
+}
+
+.ai-message a {
+    color: #1e88e5;
+    text-decoration: underline;
+}
+
+.ai-message a:hover {
+    color: #1565c0;
+}
