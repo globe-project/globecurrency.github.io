@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
     <!-- dompurify -->
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
     <!-- prism.js for syntax highlighting -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
@@ -129,15 +129,21 @@
 
 
     <script>
-      const chatLog = document.getElementById('chatLog');
-      const userInput = document.getElementById('userInput');
-      const sendButton = document.getElementById('send-button');
-      const stopButton = document.getElementById('stop-button');
+      // Ensure Supabase client is initialized before using it
+      let supabase;
+
+      // Wait for the Supabase library to load before initializing
+      window.onload = () => {
       
       // --- SUPABASE SETUP ---
       const supabaseUrl = 'https://ocbczgqiizhzsuritcld.supabase.co';
       const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jYmN6Z3FpaXpoenN1cml0Y2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU3Nzc5MjMsImV4cCI6MjA2MTM1MzkyM30.7yuw1iQ4Pd55rPOEvpvplzx0ghWNvU1Nqg_fuNFFHhk';
       const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+      const chatLog = document.getElementById('chatLog');
+      const userInput = document.getElementById('userInput');
+      const sendButton = document.getElementById('send-button');
+      const stopButton = document.getElementById('stop-button');
     
       function scrollToBottom() {
         chatLog.scrollTo({
