@@ -140,7 +140,7 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jYmN6Z3FpaXpoenN1cml0Y2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU3Nzc5MjMsImV4cCI6MjA2MTM1MzkyM30.7yuw1iQ4Pd55rPOEvpvplzx0ghWNvU1Nqg_fuNFFHhk';
     
     // Initialize Supabase client correctly
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
       const chatLog = document.getElementById('chatLog');
       const userInput = document.getElementById('userInput');
