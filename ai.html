@@ -100,30 +100,28 @@
         </div>
       </header>
 
-  <!-- AI Chat Section -->
+ <!-- AI Chat Section -->
 <div class="ai-chat-container center">
   <h1 class="h2">Globe AI Assistant</h1>
   <p>Ask our AI assistant anything about Globe, smart contracts, staking, privacy, and more.</p>
 
   <!-- Authentication Section -->
-  <div class="ai-auth-section" id="auth-section">
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <button id="signup-button" onclick="signUp(document.getElementById('email').value, document.getElementById('password').value)">Sign Up</button>
-    <button id="login-button" onclick="login(document.getElementById('email').value, document.getElementById('password').value)">Login</button>
-    <button id="logout-button" onclick="logout()">Logout</button>
+  <div class="auth-buttons">
+    <button id="signup-button" onclick="toggleForm('signup')">Sign Up</button>
+    <button id="login-button" onclick="toggleForm('login')">Login</button>
   </div>
 
-  <!-- Chat Log -->
-  <div class="ai-chat-log" id="chatLog"></div>
+  <div id="auth-form" class="auth-form">
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="submit-button" onclick="handleAuth()">Submit</button>
+  </div>
 
-  <!-- Chat Input -->
+  <div class="ai-chat-log" id="chatLog"></div>
   <div class="ai-chat-input">
     <input type="text" id="userInput" placeholder="Type your question here..." />
     <button id="send-button">Send</button>
-    <button id="stop-button" disabled aria-label="Stop Typing">
-      &#10074;&#10074; <!-- Pause icon -->
-    </button>
+    <button id="stop-button" disabled aria-label="Stop Typing">&#10074;&#10074;</button>
   </div>
 </div>
 
@@ -230,6 +228,42 @@
       }
     }
     typeNextWord();
+  }
+
+  // --- AUTH BUTTONS AND FORM LOGIC ---
+  function toggleForm(type) {
+    const form = document.getElementById('auth-form');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+  
+    // Show the form
+    form.style.display = 'block';
+  
+    if (type === 'signup') {
+      // Set up for sign-up flow
+      document.getElementById('submit-button').textContent = 'Sign Up';
+      // Reset email and password fields
+      email.value = '';
+      password.value = '';
+    } else if (type === 'login') {
+      // Set up for login flow
+      document.getElementById('submit-button').textContent = 'Log In';
+      // Reset email and password fields
+      email.value = '';
+      password.value = '';
+    }
+  }
+
+  function handleAuth() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const submitButton = document.getElementById('submit-button').textContent;
+  
+    if (submitButton === 'Sign Up') {
+      signUp(email, password); // Assuming the signUp function is defined elsewhere
+    } else if (submitButton === 'Log In') {
+      login(email, password); // Assuming the login function is defined elsewhere
+    }
   }
 
   // --- EVENT LISTENERS ---
