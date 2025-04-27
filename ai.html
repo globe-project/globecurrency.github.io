@@ -128,6 +128,20 @@
       }
 
       let typingTimeout;
+
+      // Save chat to localStorage
+      function saveChat() {
+        localStorage.setItem('chatHistory', chatLog.innerHTML);
+      }
+
+      // Load chat from localStorage
+      function loadChat() {
+        const savedChat = localStorage.getItem('chatHistory');
+        if (savedChat) {
+          chatLog.innerHTML = savedChat;
+        }
+      }
+
     
       // Gradual word typing effect function
       function typeHtmlGradually(element, html, delay) {
@@ -140,10 +154,15 @@
             element.innerHTML += words[index] + ' '; // Add the next word and a space
             index++;
             typingTimeout = setTimeout(typeNextWord, delay); // Delay for next word
+          } else {
+            saveChat(); // Save after finishing typing
           }
         }
         typeNextWord();
       }
+
+      // Load saved chat when page loads
+      window.addEventListener('load', loadChat);
     
       // Stop button functionality to stop the typing effect
       stopButton.addEventListener('click', () => {
@@ -161,6 +180,7 @@
         userMessageElement.textContent = `You: ${message}`;
         chatLog.appendChild(userMessageElement);
         scrollToBottom();
+        saveChat(); // Save after user sends message
     
         // Clear input
         userInput.value = '';
