@@ -133,7 +133,7 @@
       const userInput = document.getElementById('userInput');
       const sendButton = document.getElementById('send-button');
       const stopButton = document.getElementById('stop-button');
-    
+      
       // --- SUPABASE SETUP ---
       const supabaseUrl = 'https://ocbczgqiizhzsuritcld.supabase.co';
       const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jYmN6Z3FpaXpoenN1cml0Y2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU3Nzc5MjMsImV4cCI6MjA2MTM1MzkyM30.7yuw1iQ4Pd55rPOEvpvplzx0ghWNvU1Nqg_fuNFFHhk';
@@ -146,9 +146,8 @@
         });
       }
     
+      // --- Gradual word typing ---
       let typingTimeout;
-    
-      // Gradual word typing effect
       function typeHtmlGradually(element, html, delay, saveAfter = null) {
         let words = html.split(' ');
         let index = 0;
@@ -160,14 +159,13 @@
             index++;
             typingTimeout = setTimeout(typeNextWord, delay);
           } else {
-            if (saveAfter) saveAfter(); // Call save function after typing finished
+            if (saveAfter) saveAfter(); // Call save function after typing finishes
           }
         }
         typeNextWord();
       }
     
       // --- AUTH ---
-    
       async function signUp(email, password) {
         const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) alert('Signup error: ' + error.message);
@@ -193,11 +191,10 @@
       }
     
       // --- CHAT STORAGE ---
-    
       async function saveMessage(role, content) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-          console.error('Not logged in');
+          alert('Please log in first!');
           return;
         }
     
@@ -209,7 +206,7 @@
       async function loadChat() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-          console.error('Not logged in');
+          alert('Please log in first!');
           return;
         }
     
@@ -240,12 +237,12 @@
       }
     
       // --- CHAT HANDLING ---
-    
       stopButton.addEventListener('click', () => {
         clearTimeout(typingTimeout);
         stopButton.disabled = true;
       });
-    
+
+      console.log(sendButton); // Add this line to debug
       sendButton.addEventListener('click', async () => {
         const message = userInput.value.trim();
         if (!message) return;
@@ -257,6 +254,7 @@
         chatLog.appendChild(userMessageElement);
         scrollToBottom();
     
+        // Save user message
         await saveMessage('user', message); // Save user message
     
         userInput.value = '';
@@ -307,7 +305,6 @@
           await loadChat();
         }
       });
-    
     </script>    
     
     <!-- footer-->
